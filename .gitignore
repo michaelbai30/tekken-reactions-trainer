@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Full-size originals (~5 MB each); the app uses the *-web.png copies
+src/assets/jin-logo.png
+src/assets/bryan-logo.png
+src/assets/kazuya-logo.png

@@ -1,4 +1,4 @@
 [
-  { "id": "low1", "src": "/clips/low1.mp4", "move": "low", "startOfAttack": 90, "impact": 116, "shouldReact": true },
-  { "id": "mid1", "src": "/clips/mid1.mp4", "move": "mid", "startOfAttack": 120, "impact": 146, "shouldReact": false }
+  { "id": "low1", "drill": "bryan-snake-edge", "src": "/clips/low1.mp4", "move": "low", "startOfAttack": 90, "impact": 116, "shouldReact": true },
+  { "id": "mid1", "drill": "bryan-snake-edge", "src": "/clips/mid1.mp4", "move": "mid", "startOfAttack": 120, "impact": 146, "shouldReact": false }
 ]
