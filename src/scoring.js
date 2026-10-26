@@ -8,7 +8,6 @@ export function score(pressedFrame, clip) {
 
   // reaction time, only defined if something was pressed
   const reactionFrames = pressed ? pressedFrame - clip.startOfAttack : null
-
   // decoy
   // no press is correct
   // any press is a false-alarm
