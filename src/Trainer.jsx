@@ -16,7 +16,7 @@ function selectRandomClip(pool) {
 }
 
 // One drill's loop
-function Trainer({ clips }) {
+function Trainer({ clips, stats, onScored }) {
   const videoRef = useRef(null)
 
   // e.g calling setFrame(5) makes React re-run Trainer() w/ frame == 5
@@ -30,7 +30,6 @@ function Trainer({ clips }) {
 
   const [clip, setClip] = useState(() => selectRandomClip(clips))
   const [round, setRound] = useState(0)
-  const [stats, setStats] = useState({ correct: 0, total: 0, streak: 0, best: 0 })
 
   useEffect(() => {
     const video = videoRef.current
@@ -65,15 +64,7 @@ function Trainer({ clips }) {
     const res = score(pressedRef.current, clip)
     setResult(res)
     setStatus('done')
-    setStats((s) => {
-      const streak = res.correct ? s.streak + 1 : 0
-      return {
-        correct: s.correct + (res.correct ? 1 : 0),
-        total: s.total + 1,
-        streak,
-        best: Math.max(streak, s.best),
-      }
-    })
+    onScored(res.correct)
   }
 
   const handleNext = () => {
@@ -84,6 +75,7 @@ function Trainer({ clips }) {
     setFrame(0)
     pressedRef.current = null
   }
+
 
   return (
     <div>
