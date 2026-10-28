@@ -1,7 +1,7 @@
-// stats.js
-// This file contains the logic for tracking the user's performance statistics. 
+// stats.js contains the logic for tracking the user's performance statistics. 
 // It is used by the main app to update the stats after each reaction test.
-export const EMPTY_STATS = { correct: 0, total: 0, streak: 0, best: 0 }
+
+export const EMPTY_STATS = Object.freeze({ correct: 0, total: 0, streak: 0, best: 0 })
 
 /**
  * @param {{ correct: number, total: number, streak: number, best: number }} stats

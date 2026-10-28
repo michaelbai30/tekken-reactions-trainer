@@ -19,7 +19,6 @@ function selectRandomClip(pool) {
 function Trainer({ clips, stats, onScored }) {
   const videoRef = useRef(null)
 
-  // e.g calling setFrame(5) makes React re-run Trainer() w/ frame == 5
   const [frame, setFrame] = useState(0) // current value frame starting at 0 and function to change it
 
   const [status, setStatus] = useState('idle') // 'idle' | 'playing' | 'done'
@@ -31,6 +30,35 @@ function Trainer({ clips, stats, onScored }) {
   const [clip, setClip] = useState(() => selectRandomClip(clips))
   const [round, setRound] = useState(0)
 
+  const finishedRef = useRef(false)
+
+  // stop the clip, score it, display result
+  const finishClip = () => {
+    if (finishedRef.current){
+      return
+    }
+    finishedRef.current = true
+    videoRef.current.pause() // <video> is an HTMLMediaElement
+  
+    // freeze on the frame where the user actually clicked
+    if (pressedRef.current !== null) {
+      videoRef.current.currentTime = (pressedRef.current + 0.5) / FPS // middle of the frame, so rounding can't pick a neighbour
+      frameRef.current = pressedRef.current
+      setFrame(pressedRef.current)
+    }
+    const res = score(pressedRef.current, clip)
+    setResult(res)
+    setStatus('done')
+    onScored(res.correct)
+  }
+
+
+  const finishRef = useRef(finishClip)
+
+  useEffect(() => {
+    finishRef.current = finishClip
+  })
+
   useEffect(() => {
     const video = videoRef.current
     let handle
@@ -40,6 +68,11 @@ function Trainer({ clips, stats, onScored }) {
       const curFrame = Math.round(metadata.mediaTime * FPS)
       frameRef.current = curFrame
       setFrame(curFrame)
+      // a click was registered: end the clip and score it
+      if (pressedRef.current !== null && curFrame >= pressedRef.current) {
+        finishRef.current()
+        return
+      }
       handle = video.requestVideoFrameCallback(onFrame) // re-registers the callback
     }
 
@@ -52,19 +85,13 @@ function Trainer({ clips, stats, onScored }) {
     if (status === 'idle') {
       videoRef.current.play()
       setStatus('playing')
-    } else if (status === 'playing') {
+    } 
+    else if (status === 'playing') {
       // Register a reaction on click
       if (pressedRef.current === null) {
         pressedRef.current = frameRef.current
       }
     }
-  }
-
-  const handleClipEnded = () => {
-    const res = score(pressedRef.current, clip)
-    setResult(res)
-    setStatus('done')
-    onScored(res.correct)
   }
 
   const handleNext = () => {
@@ -74,6 +101,7 @@ function Trainer({ clips, stats, onScored }) {
     setResult(null)
     setFrame(0)
     pressedRef.current = null
+    finishedRef.current = false
   }
 
 
@@ -86,8 +114,8 @@ function Trainer({ clips, stats, onScored }) {
         muted
         playsInline
         width={640}
-        onClick={handleClick}
-        onEnded={handleClipEnded}
+        onPointerDown={handleClick}
+        onEnded={finishClip}
         onContextMenu={(e) => e.preventDefault()}
         style={{ cursor: 'pointer' }}
       />
@@ -97,7 +125,8 @@ function Trainer({ clips, stats, onScored }) {
       {status === 'done' && result && (
         <>
           <p>{MESSAGES[result.reason]}</p>
-          {result.reactionFrames !== null && (
+          {/* only show a reaction time for presses after the attack started*/}
+          {result.reactionFrames > 0 && (
             <p>Reaction time: {result.reactionFrames} frames</p>
           )}
         </>
