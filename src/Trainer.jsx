@@ -1,3 +1,5 @@
+// Trainer.jsx: Component that runs a single drill, loops through clips randomly, scores user input, and displays results
+
 import { useEffect, useRef, useState } from 'react'
 import { score } from './scoring.js'
 
@@ -18,31 +20,30 @@ function selectRandomClip(pool) {
 // One drill's loop
 function Trainer({ clips, stats, onScored }) {
   const videoRef = useRef(null)
-
-  const [frame, setFrame] = useState(0) // current value frame starting at 0 and function to change it
-
-  const [status, setStatus] = useState('idle') // 'idle' | 'playing' | 'done'
-
   const frameRef = useRef(0)
   const pressedRef = useRef(null)
-  const [result, setResult] = useState(null)
+  const isFinishedRef = useRef(false)
+  const handleClickRef = useRef(null)
 
+  const [frame, setFrame] = useState(0) // current value frame starting at 0 and function to change it
+  const [status, setStatus] = useState('idle') // 'idle' | 'playing' | 'done'
+  const [result, setResult] = useState(null)
   const [clip, setClip] = useState(() => selectRandomClip(clips))
   const [round, setRound] = useState(0)
 
-  const finishedRef = useRef(false)
+  // --- Handlers ---
 
   // stop the clip, score it, display result
   const finishClip = () => {
-    if (finishedRef.current){
+    if (isFinishedRef.current){
       return
     }
-    finishedRef.current = true
+    isFinishedRef.current = true
     videoRef.current.pause() // <video> is an HTMLMediaElement
   
     // freeze on the frame where the user actually clicked
     if (pressedRef.current !== null) {
-      videoRef.current.currentTime = (pressedRef.current + 0.5) / FPS // middle of the frame, so rounding can't pick a neighbour
+      videoRef.current.currentTime = (pressedRef.current + 0.5) / FPS
       frameRef.current = pressedRef.current
       setFrame(pressedRef.current)
     }
@@ -52,35 +53,6 @@ function Trainer({ clips, stats, onScored }) {
     onScored(res.correct)
   }
 
-
-  const finishRef = useRef(finishClip)
-
-  useEffect(() => {
-    finishRef.current = finishClip
-  })
-
-  useEffect(() => {
-    const video = videoRef.current
-    let handle
-
-    // metadata.mediaTime is the video timestamp in seconds of the frame currently on screen
-    const onFrame = (now, metadata) => {
-      const curFrame = Math.round(metadata.mediaTime * FPS)
-      frameRef.current = curFrame
-      setFrame(curFrame)
-      // a click was registered: end the clip and score it
-      if (pressedRef.current !== null && curFrame >= pressedRef.current) {
-        finishRef.current()
-        return
-      }
-      handle = video.requestVideoFrameCallback(onFrame) // re-registers the callback
-    }
-
-    handle = video.requestVideoFrameCallback(onFrame)
-    return () => video.cancelVideoFrameCallback(handle)
-  }, [round]) // re-attach to the new <video> element per round
-
-  // --- Handlers ---
   const handleClick = () => {
     if (status === 'idle') {
       videoRef.current.play()
@@ -101,8 +73,60 @@ function Trainer({ clips, stats, onScored }) {
     setResult(null)
     setFrame(0)
     pressedRef.current = null
-    finishedRef.current = false
+    isFinishedRef.current = false
   }
+
+  const finishClipRef = useRef(finishClip)
+  useEffect(() => {
+    finishClipRef.current = finishClip
+  })
+
+  useEffect(() => {
+    handleClickRef.current = handleClick
+  })
+
+  useEffect(() => {
+    const video = videoRef.current
+    let handle
+
+    // metadata.mediaTime is the video timestamp in seconds of the frame currently on screen
+    const onFrame = (now, metadata) => {
+      const curFrame = Math.round(metadata.mediaTime * FPS)
+      frameRef.current = curFrame
+      setFrame(curFrame)
+      // a click was registered: end the clip and score it
+      if (pressedRef.current !== null && curFrame >= pressedRef.current) {
+        finishClipRef.current()
+        return
+      }
+      handle = video.requestVideoFrameCallback(onFrame) // re-registers the callback
+    }
+
+    handle = video.requestVideoFrameCallback(onFrame)
+    return () => video.cancelVideoFrameCallback(handle)
+  }, [round]) // re-attach to the new <video> element per round
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.target.matches('input, textarea')){
+        return
+      }
+      // don't trigger on key combos
+      if (e.ctrlKey || e.metaKey || e.altKey){
+        return
+      }
+      if (e.code === 'Space' || e.code === 'KeyS' || e.code === 'ArrowDown'){
+        e.preventDefault() // stops default scrolling behavior
+        if (e.repeat){
+          return
+        }
+        handleClickRef.current()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
 
   return (
@@ -121,7 +145,7 @@ function Trainer({ clips, stats, onScored }) {
       />
       <p>Score: {stats.correct}/{stats.total} | Streak: {stats.streak} | Highest Streak: {stats.best}</p>
       <p>(Debug) Frame: {frame}</p>
-      {status === 'idle' && <p>Click the video to start</p>}
+      {status === 'idle' && <p>Click the video or press Space to start</p>}
       {status === 'done' && result && (
         <>
           <p>{MESSAGES[result.reason]}</p>
