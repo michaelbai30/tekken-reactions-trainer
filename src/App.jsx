@@ -36,7 +36,7 @@ function App() {
       <img
         src={logo}
         alt="Tekken React"
-        width={640}
+        width={960}
         style={{ maxWidth: '100%', height: 'auto' }}
       />
       <div role="tablist">

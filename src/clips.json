@@ -24,11 +24,11 @@
 { "id": "kaz-hs-03", "drill": "kazuya-ff3", "src": "/clips/kazuya_ff3/kaz_hs_3.mp4", "shouldReact": false },
 { "id": "kaz-hs-04", "drill": "kazuya-ff3", "src": "/clips/kazuya_ff3/kaz_hs_4.mp4", "shouldReact": false },
 { "id": "feng-ss4-01", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss4_01.mp4", "startOfAttack": 221, "impact": 241, "shouldReact": true },
-{ "id": "feng-ss4-02", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss4_02.mp4", "startOfAttack": 109, "impact": 120, "shouldReact": true },
+{ "id": "feng-ss4-02", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss4_02.mp4", "startOfAttack": 109, "impact": 129, "shouldReact": true },
 { "id": "feng-ss4-03", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss4_03.mp4", "startOfAttack": 312, "impact": 332, "shouldReact": true },
 { "id": "feng-ss4-04", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss4_04.mp4", "startOfAttack": 221, "impact": 241, "shouldReact": true },
 { "id": "feng-ss12-01", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss12_01.mp4", "shouldReact": false},
 { "id": "feng-ss12-02", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_ss12_02.mp4", "shouldReact": false},
-{ "id": "feng-df3_03", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_df3_03.mp4", "shouldReact": false},
-{ "id": "feng-f12_04", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_f12_04.mp4", "shouldReact": false}
+{ "id": "feng-df3-03", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_df3_03.mp4", "shouldReact": false},
+{ "id": "feng-f12-04", "drill": "feng-ss4", "src": "/clips/feng_ss4/feng_f12_04.mp4", "shouldReact": false}
 ]
