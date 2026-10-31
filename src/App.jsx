@@ -12,6 +12,7 @@ function App() {
   const [statsByDrill, setStatsByDrill] = useState(loadStats)
   const [drillId, setDrillId] = useState(DRILLS[0].id)
   const pool = clips.filter((clip) => clip.drill === drillId)
+  const drill = DRILLS.find((d) => d.id === drillId)
 
   /**
    * handler for when a drill is scored (correct or incorrect)
@@ -57,6 +58,7 @@ function App() {
           clips={pool}
           stats={statsByDrill[drillId] ?? EMPTY_STATS}
           onScored={handleScored}
+          drill={drill}
         />
       )}
     </div>

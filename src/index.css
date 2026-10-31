@@ -21,3 +21,8 @@ body {
   gap: 8px;
   margin-bottom: 16px;
 }
+
+dialog {
+  text-align: left;
+  max-width: 720px;
+}

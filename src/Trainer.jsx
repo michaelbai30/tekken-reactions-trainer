@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { score } from './scoring.js'
+import HelpModal from './HelpModal.jsx'
 
 const FPS = 60
 
@@ -18,7 +19,7 @@ function selectRandomClip(pool) {
 }
 
 // One drill's loop
-function Trainer({ clips, stats, onScored }) {
+function Trainer({ clips, stats, onScored, drill}) {
   const videoRef = useRef(null)
   const frameRef = useRef(0)
   const pressedRef = useRef(null)
@@ -53,7 +54,17 @@ function Trainer({ clips, stats, onScored }) {
     onScored(res.correct)
   }
 
-  const handleClick = () => {
+   const handleNext = () => {
+    setClip(selectRandomClip(clips))
+    setRound((r) => r + 1)
+    setStatus('idle')
+    setResult(null)
+    setFrame(0)
+    pressedRef.current = null
+    isFinishedRef.current = false
+  }
+
+  const handleClick = (canAdvance = true) => {
     if (status === 'idle') {
       videoRef.current.play()
       setStatus('playing')
@@ -64,17 +75,15 @@ function Trainer({ clips, stats, onScored }) {
         pressedRef.current = frameRef.current
       }
     }
+
+    else if (status === 'done') {
+      if (canAdvance) {
+        handleNext()
+      }
+    }
   }
 
-  const handleNext = () => {
-    setClip(selectRandomClip(clips))
-    setRound((r) => r + 1)
-    setStatus('idle')
-    setResult(null)
-    setFrame(0)
-    pressedRef.current = null
-    isFinishedRef.current = false
-  }
+ 
 
   const finishClipRef = useRef(finishClip)
   useEffect(() => {
@@ -109,7 +118,7 @@ function Trainer({ clips, stats, onScored }) {
   // Keyboard shortcuts
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (e.target.matches('input, textarea')){
+      if (e.target.matches('input, textarea') || e.target.closest('dialog')){
         return
       }
       // don't trigger on key combos
@@ -121,7 +130,7 @@ function Trainer({ clips, stats, onScored }) {
         if (e.repeat){
           return
         }
-        handleClickRef.current()
+        handleClickRef.current(e.code === 'Space') // only allow advancing on Space
       }
     }
     window.addEventListener('keydown', onKeyDown)
@@ -137,17 +146,24 @@ function Trainer({ clips, stats, onScored }) {
         src={clip.src}
         muted
         playsInline
-        width={640}
+        width={960}
         onPointerDown={handleClick}
         onEnded={finishClip}
         onContextMenu={(e) => e.preventDefault()}
         style={{ cursor: 'pointer' }}
       />
+      <p></p>
+      {status !== 'playing' && (
+        <HelpModal
+          drill={drill}
+        />
+      )}
       <p>Score: {stats.correct}/{stats.total} | Streak: {stats.streak} | Highest Streak: {stats.best}</p>
       <p>(Debug) Frame: {frame}</p>
       {status === 'idle' && <p>Click the video or press Space to start</p>}
       {status === 'done' && result && (
         <>
+          <p> Click the video or press Space for the next clip</p>
           <p>{MESSAGES[result.reason]}</p>
           {/* only show a reaction time for presses after the attack started*/}
           {result.reactionFrames > 0 && (
@@ -155,7 +171,6 @@ function Trainer({ clips, stats, onScored }) {
           )}
         </>
       )}
-      {status === 'done' && <button onClick={handleNext}>Next clip</button>}
     </div>
   )
 }

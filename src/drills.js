@@ -1,6 +1,6 @@
 export const DRILLS = [
-  { id: 'bryan-df3', name: 'Bryan Snake Edge' },
-  { id: 'jin-d2', name: 'Jin Scourge' },
-  { id: 'kazuya-ff3', name: 'Kazuya Left Splits Kick' },
-  { id: 'feng-ss4', name: 'Feng Side Step 4'}
+  { id: 'bryan-df3', name: 'Bryan Snake Edge', example: "/clips/bryan_df3/bryan_df3_01.mp4", help: {title: "Bryan's Snake Edge (Easy)", about: "Bryan's df3 input (Snake Edge) is a slow, reactable homing low that leads to a bound on hit. It is i29 and involves a distinct crouching animation, making it easy to consistently block with practice." } },
+  { id: 'jin-d2', name: 'Jin Scourge', example: "/clips/jin_d2/jin_d2_01.mp4", help: {title: "Jin's Scourge (Medium)", about: "Jin's d2 input (Scourge) is a fast but reactable i22 low given its distinct animation and sound profile. Being -14 on block, it is important to be able to punish this move, especially for characters with a 14f or lower WS punish. On hit, it is +4 and leads to guaranteed followups on counterhit."}},
+  { id: 'kazuya-ff3', name: 'Kazuya Left Splits Kick', example: "/clips/kazuya_ff3/kazuya_ff3_01.mp4", help: {title: "Kazuya's Left Splits Kick (Hard)", about: "Kazuya's ff3 input (Left splits kick) is a very fast i20 mid that often comes out a crouch dash as the slower mid mixup to his unreactable hellsweep low. Mid-stage, it is advisable to block crouching on Kazuya's oki and look out for slower mids like left splits kick or patricide fist, while protecting yourself from the unreactable hellsweep. Look for the distinct axe kick animation following wavedash mixups."}},
+  { id: 'feng-ss4', name: 'Feng Side Step 4', example: "/clips/feng_ss4/feng_ss4_01.mp4", help: {title: "Feng Wei's Side Step 4 (Extreme)", about: "Feng Wei's ss4 input is very fast i20 low that must come out of a side step. On clean hit it leads into a full bound. Being launch punishable on block, it is rewarding to be able to react to this move. However, he can mix his moves after sidestep, including ss1+2, making it difficult, yet possible, to consistently block on reaction (if you're cracked)."}}
 ]
