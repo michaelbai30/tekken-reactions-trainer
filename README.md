@@ -1,16 +1,41 @@
-# React + Vite
+# Tekken Reactions Trainer
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React browser app for practicing reacting to certain important moves on block in Tekken 8 using real match footage.
 
-Currently, two official plugins are available:
+**Hosted at** https://tekken-reactions-trainer.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it trains
+Many strong moves in Tekken 8 are slow enough to block on reaction, if you can recognize them. For example, Jin's D2 (Scourge) is a relatively low-risk, high-reward move that requires practice in order to be able to block consistently.
+Being able to block such moves on reaction separates high level players from the rest.
+The app separates **four** commonly seen moves into its own drill. Each drill plays a short clip of variable timing that ends in either the target move or a decoy. 
+The goal is to block the real move before it hits, and hold still for everything else (no press).
 
-## React Compiler
+Videos are recorded at 60 fps. 
+Every press is graded as a block, late, missed, or false alarm. 
+Real attacks also show your reaction time in frames. 
+Stats and streaks are saved per drill.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Drill | Input | Type | Startup | Difficulty | Decoys |
+| --- | --- | --- | --- | --- | --- |
+| Bryan – Snake Edge | df3 | low | i29 | Easy | b1, qcb3, f3, qcb4 |
+| Jin – Scourge | d2 | Low | i22 | Medium | Can-Can, ff2, ff3, cd1 |
+| Kazuya – Left Splits Kick | ff3 | Mid | i20 | Hard | Hellsweep |
+| Feng – Swift Sweep Kick| ss4 | Low | i20 | Extreme | ss1+2, df3, uf4 |
 
-## Expanding the Oxlint configuration
+**Controls:** click the video or press Space to start. Block with click, Space, S, or ↓. 
+After the result, click or press Space to load the next clip. 
+The **?** button explains each drill and plays an example.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Stack
+
+React · Vite · Vitest · oxlint · GitHub Actions CI. 
+Clip timing uses `requestVideoFrameCallback`, and stats are stored in `localStorage`.
+
+## Run locally
+
+```bash
+pnpm install
+pnpm dev # start the dev server
+pnpm test # run tests (optional)
+pnpm lint # run linter (optional)
+```
