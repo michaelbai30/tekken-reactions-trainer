@@ -2,7 +2,7 @@
 
 A React browser app for practicing reacting to certain important moves on block in Tekken 8 using real match footage.
 
-**Hosted at** https://tekken-reactions-trainer.vercel.app/
+**Hosted at** https://tekkenreact.vercel.app/
 
 ## What it trains
 Many strong moves in Tekken 8 are slow enough to block on reaction, if you can recognize them. For example, Jin's D2 (Scourge) is a relatively low-risk, high-reward move that requires practice in order to be able to block consistently.
